@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ community.name }} - NEXTSTEP{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 800px; margin-top: 32px;">
+    <div class="card">
+        <h1 style="margin-bottom: 8px;">{{ community.name }}</h1>
+        <p style="color: var(--text-light); margin-bottom: 16px;">{{ community.description }}</p>
+        <div style="display: flex; gap: 12px; margin-bottom: 24px;">
+            <span class="tag tag-verified">{{ community.member_count }} members</span>
+            <span class="tag {% if community.is_public %}tag-free{% else %}tag-paid{% endif %}">
+                {% if community.is_public %}Public{% else %}Private{% endif %}
+            </span>
+            {% if community.topic_focus %}
+            <span class="tag tag-verified">{{ community.topic_focus }}</span>
+            {% endif %}
+        </div>
+
+        {% if user.is_authenticated %}
+            {% if is_member %}
+            <form method="post" action="{% url 'leave_community' community.pk %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Leave Community</button>
+            </form>
+            {% else %}
+            <form method="post" action="{% url 'join_community' community.pk %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary">Join Community</button>
+            </form>
+            {% endif %}
+        {% endif %}
+    </div>
+
+    <div class="card" style="margin-top: 24px;">
+        <h3 class="card-title">Members</h3>
+        <div class="grid" style="grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));">
+            {% for member in community.members.all %}
+            <div style="text-align: center; padding: 12px;">
+                <div style="width: 48px; height: 48px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; font-weight: 700;">
+                    {{ member.username|first|upper }}
+                </div>
+                <p style="font-weight: 600;">{{ member.username }}</p>
+            </div>
+            {% empty %}
+            <p>No members yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="card" style="margin-top: 24px;">
+        <h3 class="card-title">Community Chat</h3>
+        
+        <div style="max-height: 400px; overflow-y: auto; margin-bottom: 16px;">
+            {% for msg in messages_list %}
+            <div style="padding: 12px; border-bottom: 1px solid var(--border);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                    <span style="font-weight: 600; color: var(--primary);">{{ msg.sender.username }}</span>
+                    <span style="font-size: 0.75rem; color: var(--text-light);">{{ msg.created_at|date:"M d, Y H:i" }}</span>
+                </div>
+                <p style="margin: 0;">{{ msg.text }}</p>
+            </div>
+            {% empty %}
+            <p style="color: var(--text-light);">No messages yet. Be the first to say something!</p>
+            {% endfor %}
+        </div>
+
+        {% if is_member %}
+        <form method="post" action="{% url 'post_message' community.pk %}">
+            {% csrf_token %}
+            <div style="display: flex; gap: 8px;">
+                <input type="text" name="text" placeholder="Type a message..." required style="flex: 1;">
+                <button type="submit" class="btn btn-primary">Send</button>
+            </div>
+        </form>
+        {% else %}
+        <p style="color: var(--text-light);">Join this community to participate in the chat.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

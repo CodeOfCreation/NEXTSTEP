@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}Sign Up - NEXTSTEP{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 500px; margin-top: 48px;">
+    <div class="card">
+        <h2 class="card-title" style="text-align: center;">Create Account</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="confirm_password">Confirm Password</label>
+                <input type="password" id="confirm_password" name="confirm_password" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="career_goal">Career Goal</label>
+                <input type="text" id="career_goal" name="career_goal" class="form-control" placeholder="e.g., Data Scientist">
+            </div>
+            <div class="form-group">
+                <label for="budget_mode">Budget Mode</label>
+                <select id="budget_mode" name="budget_mode" class="form-control">
+                    <option value="mixed">Best Quality (Free + Paid)</option>
+                    <option value="free">Free Resources Only</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="learning_style">Learning Style</label>
+                <select id="learning_style" name="learning_style" class="form-control">
+                    <option value="video">Video</option>
+                    <option value="text">Text</option>
+                    <option value="interactive">Interactive Labs</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Sign Up</button>
+        </form>
+        <p style="text-align: center; margin-top: 16px;">
+            Already have an account? <a href="{% url 'login' %}" style="color: var(--primary);">Login</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

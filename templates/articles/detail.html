@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ article.title }} - NEXTSTEP{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 800px; margin-top: 32px;">
+    <div class="card">
+        <h1 style="margin-bottom: 16px;">{{ article.title }}</h1>
+        <div style="display: flex; gap: 16px; color: var(--text-light); font-size: 0.875rem; margin-bottom: 24px;">
+            <span>By {{ article.author.username }}</span>
+            <span>{{ article.created_at|date:"F d, Y" }}</span>
+        </div>
+        <div style="line-height: 1.8;">
+            {{ article.content|linebreaks }}
+        </div>
+    </div>
+</div>
+{% endblock %}

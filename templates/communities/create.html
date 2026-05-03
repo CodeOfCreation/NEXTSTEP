@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Community - NEXTSTEP{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 600px; margin-top: 32px;">
+    <div class="card">
+        <h2 class="card-title">Create Community</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="name">Community Name</label>
+                <input type="text" id="name" name="name" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" class="form-control" rows="4" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="topic_focus">Topic Focus</label>
+                <input type="text" id="topic_focus" name="topic_focus" class="form-control" placeholder="e.g., Machine Learning">
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" name="is_public" checked> Public Community
+                </label>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Create Community</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

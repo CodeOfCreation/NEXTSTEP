@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}Profile - NEXTSTEP{% endblock %}
+
+{% block content %}
+<div class="container" style="margin-top: 32px;">
+    <div class="card">
+        <h2 class="card-title">My Profile</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" class="form-control" value="{{ user.username }}" disabled>
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" class="form-control" value="{{ user.email }}" disabled>
+            </div>
+            <div class="form-group">
+                <label for="career_goal">Career Goal</label>
+                <input type="text" id="career_goal" name="career_goal" class="form-control" value="{{ profile.career_goal|default:'' }}">
+            </div>
+            <div class="form-group">
+                <label for="budget_mode">Budget Mode</label>
+                <select id="budget_mode" name="budget_mode" class="form-control">
+                    <option value="mixed" {% if profile.budget_mode == 'mixed' %}selected{% endif %}>Best Quality (Free + Paid)</option>
+                    <option value="free" {% if profile.budget_mode == 'free' %}selected{% endif %}>Free Resources Only</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="learning_style">Learning Style</label>
+                <select id="learning_style" name="learning_style" class="form-control">
+                    <option value="video" {% if profile.learning_style == 'video' %}selected{% endif %}>Video</option>
+                    <option value="text" {% if profile.learning_style == 'text' %}selected{% endif %}>Text</option>
+                    <option value="interactive" {% if profile.learning_style == 'interactive' %}selected{% endif %}>Interactive Labs</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Update Profile</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

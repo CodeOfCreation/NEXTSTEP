@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - NEXTSTEP{% endblock %}
+
+{% block content %}
+<div class="container" style="margin-top: 32px;">
+    <h1>Welcome back, {{ user.username }}!</h1>
+
+    <div class="stats-grid" style="margin-top: 24px;">
+        <div class="stat-card">
+            <div class="stat-value">{{ completed_count }}</div>
+            <div class="stat-label">Topics Completed</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">{{ remaining_count }}</div>
+            <div class="stat-label">Topics Remaining</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">{{ total_topics }}</div>
+            <div class="stat-label">Total Topics</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">{{ user_communities|length }}</div>
+            <div class="stat-label">Communities</div>
+        </div>
+    </div>
+
+    {% if chart_url %}
+    <div class="card" style="margin-top: 24px;">
+        <h3 class="card-title">Progress Overview</h3>
+        <div style="text-align: center;">
+            <img src="data:image/png;base64,{{ chart_url }}" alt="Progress Chart" style="max-width: 100%; height: auto;">
+        </div>
+    </div>
+    {% endif %}
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 24px;">
+        <div class="card">
+            <h3 class="card-title">Recent Activities</h3>
+            {% for activity in activities %}
+            <div style="padding: 12px; border-bottom: 1px solid var(--border);">
+                <p style="font-weight: 600;">{{ activity.activity_type|title }}</p>
+                <p style="font-size: 0.875rem; color: var(--text-light);">{{ activity.description }}</p>
+                <p style="font-size: 0.75rem; color: var(--text-light);">{{ activity.created_at|timesince }} ago</p>
+            </div>
+            {% empty %}
+            <p>No recent activities.</p>
+            {% endfor %}
+        </div>
+
+        <div class="card">
+            <h3 class="card-title">Active Roadmaps</h3>
+            {% for roadmap in active_roadmaps %}
+            <div style="padding: 12px; border-bottom: 1px solid var(--border);">
+                <a href="{% url 'roadmap_detail' roadmap.pk %}" style="font-weight: 600; color: var(--primary);">{{ roadmap.title }}</a>
+                <p style="font-size: 0.875rem; color: var(--text-light);">{{ roadmap.career_role }}</p>
+            </div>
+            {% empty %}
+            <p>No active roadmaps. <a href="{% url 'roadmap_explore' %}">Explore roadmaps</a></p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="card" style="margin-top: 24px;">
+        <h3 class="card-title">My Communities</h3>
+        <div class="grid" style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));">
+            {% for community in user_communities %}
+            <div style="padding: 12px; text-align: center;">
+                <a href="{% url 'community_detail' community.pk %}" style="font-weight: 600; color: var(--primary);">{{ community.name }}</a>
+                <p style="font-size: 0.875rem; color: var(--text-light);">{{ community.member_count }} members</p>
+            </div>
+            {% empty %}
+            <p>No communities joined yet. <a href="{% url 'explore_communities' %}">Explore communities</a></p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

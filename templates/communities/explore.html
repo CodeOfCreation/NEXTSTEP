@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Communities - NEXTSTEP{% endblock %}
+
+{% block content %}
+<div class="container" style="margin-top: 32px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+        <h1>Explore Communities</h1>
+        <a href="{% url 'create_community' %}" class="btn btn-primary">Create Community</a>
+    </div>
+    <div class="grid">
+        {% for community in communities %}
+        <div class="card">
+            <h3 class="card-title">{{ community.name }}</h3>
+            <p>{{ community.description|truncatewords:20 }}</p>
+            <div style="margin: 12px 0;">
+                <span class="tag tag-verified">{{ community.member_count }} members</span>
+                <span class="tag {% if community.is_public %}tag-free{% else %}tag-paid{% endif %}">
+                    {% if community.is_public %}Public{% else %}Private{% endif %}
+                </span>
+                {% if community.topic_focus %}
+                <span class="tag tag-verified">{{ community.topic_focus }}</span>
+                {% endif %}
+            </div>
+            <a href="{% url 'community_detail' community.pk %}" class="btn btn-outline btn-sm">View Community</a>
+        </div>
+        {% empty %}
+        <p>No communities available yet.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

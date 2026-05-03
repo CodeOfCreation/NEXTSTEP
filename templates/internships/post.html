@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Post Internship - NEXTSTEP{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 600px; margin-top: 32px;">
+    <div class="card">
+        <h2 class="card-title">Post an Internship</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" id="title" name="title" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="company">Company</label>
+                <input type="text" id="company" name="company" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" class="form-control" rows="4" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="requirements">Requirements</label>
+                <textarea id="requirements" name="requirements" class="form-control" rows="3" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="location">Location</label>
+                <input type="text" id="location" name="location" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="duration">Duration</label>
+                <input type="text" id="duration" name="duration" class="form-control" placeholder="e.g., 3 Months">
+            </div>
+            <div class="form-group">
+                <label for="stipend">Stipend</label>
+                <input type="text" id="stipend" name="stipend" class="form-control" placeholder="e.g., $1000/month">
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" name="is_remote"> Remote
+                </label>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Post Internship</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

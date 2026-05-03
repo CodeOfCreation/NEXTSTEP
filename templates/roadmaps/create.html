@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Roadmap - NEXTSTEP{% endblock %}
+
+{% block content %}
+<div class="container" style="margin-top: 32px; max-width: 800px;">
+    <div class="card">
+        <h2 class="card-title">Create Your Roadmap</h2>
+        <p style="color: var(--muted); margin-bottom: 20px;">Build a step-by-step learning path with topics and curated resources.</p>
+
+        <form method="post" x-data="roadmapBuilder()">
+            {% csrf_token %}
+            
+            <h3 style="margin-top: 24px; margin-bottom: 16px; font-size: 1.1rem;">Roadmap Details</h3>
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" id="title" name="title" class="form-control" placeholder="e.g., Full Stack Developer" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" class="form-control" rows="3" placeholder="What will learners achieve?" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="career_role">Career Role</label>
+                <input type="text" id="career_role" name="career_role" class="form-control" placeholder="e.g., Software Engineer" required>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                <div class="form-group">
+                    <label for="difficulty">Difficulty</label>
+                    <select id="difficulty" name="difficulty" class="form-control">
+                        <option value="beginner">Beginner</option>
+                        <option value="intermediate">Intermediate</option>
+                        <option value="advanced">Advanced</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="estimated_duration">Estimated Duration</label>
+                    <input type="text" id="estimated_duration" name="estimated_duration" class="form-control" placeholder="e.g., 6 Months">
+                </div>
+            </div>
+
+            <hr style="margin: 32px 0; border-color: var(--border);">
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <h3 style="font-size: 1.1rem;">Topics</h3>
+                <button type="button" class="btn btn-outline btn-sm" @click="addTopic()">+ Add Topic</button>
+            </div>
+
+            <template x-for="(topic, tIndex) in topics" :key="tIndex">
+                <div class="card" style="margin-bottom: 20px; background: var(--surface);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                        <h4 style="font-size: 1rem;" x-text="'Topic ' + (tIndex + 1)"></h4>
+                        <button type="button" class="btn btn-outline btn-sm" style="color: var(--danger);" @click="removeTopic(tIndex)">Remove</button>
+                    </div>
+
+                    <div class="form-group">
+                        <label :for="'topic_title_' + tIndex">Topic Title</label>
+                        <input type="text" :id="'topic_title_' + tIndex" :name="'topic_title_' + tIndex" class="form-control" x-model="topic.title" placeholder="e.g., Python Basics" required>
+                    </div>
+                    <div class="form-group">
+                        <label :for="'topic_description_' + tIndex">Description</label>
+                        <textarea :id="'topic_description_' + tIndex" :name="'topic_description_' + tIndex" class="form-control" rows="2" x-model="topic.description" placeholder="What this topic covers"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label :for="'topic_estimated_time_' + tIndex">Estimated Time</label>
+                        <input type="text" :id="'topic_estimated_time_' + tIndex" :name="'topic_estimated_time_' + tIndex" class="form-control" x-model="topic.estimated_time" placeholder="e.g., 2 Weeks">
+                    </div>
+
+                    <div style="margin-top: 20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                            <h5 style="font-size: 0.9rem; color: var(--muted);">Resources</h5>
+                            <button type="button" class="btn btn-outline btn-sm" @click="addResource(tIndex)">+ Add Resource</button>
+                        </div>
+
+                        <template x-for="(resource, rIndex) in topic.resources" :key="rIndex">
+                            <div style="display: grid; grid-template-columns: 2fr 2fr 1fr auto; gap: 8px; align-items: end; margin-bottom: 10px;">
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <input type="text" :name="'resource_title_' + tIndex + '_' + rIndex" class="form-control" x-model="resource.title" placeholder="Resource title" required>
+                                </div>
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <input type="url" :name="'resource_url_' + tIndex + '_' + rIndex" class="form-control" x-model="resource.url" placeholder="https://..." required>
+                                </div>
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <select :name="'resource_type_' + tIndex + '_' + rIndex" class="form-control" x-model="resource.resource_type">
+                                        <option value="free">Free</option>
+                                        <option value="paid">Paid</option>
+                                    </select>
+                                </div>
+                                <button type="button" class="btn btn-outline btn-sm" style="color: var(--danger); height: fit-content;" @click="removeResource(tIndex, rIndex)">×</button>
+                            </div>
+                        </template>
+
+                        <p x-show="topic.resources.length === 0" style="color: var(--muted); font-size: 0.85rem; text-align: center; padding: 12px;">No resources added yet. Click "+ Add Resource" to add learning materials.</p>
+                    </div>
+                </div>
+            </template>
+
+            <p x-show="topics.length === 0" style="color: var(--muted); text-align: center; padding: 32px;">No topics added yet. Click "+ Add Topic" to start building your roadmap.</p>
+
+            <div style="margin-top: 32px; display: flex; gap: 12px;">
+                <a href="{% url 'roadmap_explore' %}" class="btn btn-outline">Cancel</a>
+                <button type="submit" class="btn btn-primary" style="flex: 1;" :disabled="topics.length === 0">Create Roadmap</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function roadmapBuilder() {
+    return {
+        topics: [],
+        addTopic() {
+            this.topics.push({
+                title: '',
+                description: '',
+                estimated_time: '',
+                resources: []
+            });
+        },
+        removeTopic(index) {
+            this.topics.splice(index, 1);
+        },
+        addResource(topicIndex) {
+            this.topics[topicIndex].resources.push({
+                title: '',
+                url: '',
+                resource_type: 'free'
+            });
+        },
+        removeResource(topicIndex, resourceIndex) {
+            this.topics[topicIndex].resources.splice(resourceIndex, 1);
+        }
+    }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}Apply - {{ internship.title }} - NEXTSTEP{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 600px; margin-top: 32px;">
+    <div class="card">
+        <h2 class="card-title">Apply for {{ internship.title }}</h2>
+        <p style="color: var(--text-light); margin-bottom: 16px;">{{ internship.company }} - {{ internship.location }}</p>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="cover_letter">Cover Letter</label>
+                <textarea id="cover_letter" name="cover_letter" class="form-control" rows="6" placeholder="Tell us why you're a good fit..." required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="resume_link">Resume Link (optional)</label>
+                <input type="url" id="resume_link" name="resume_link" class="form-control" placeholder="https://your-resume.com">
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Submit Application</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

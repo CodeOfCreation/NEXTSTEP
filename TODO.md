@@ -1,0 +1,22 @@
+# NEXTSTEP Platform Build TODO
+
+- [x] Create Django project core (manage.py, settings, urls)
+- [x] Create accounts app (models, views, templates)
+- [x] Create roadmaps app (models, views, templates)
+- [x] Create articles app (models, views, templates)
+- [x] Create internships app (models, views, templates)
+- [x] Create communities app (models, views, templates)
+- [x] Create dashboard app with Matplotlib charts
+- [x] Create base templates and static files (CSS, AlpineJS)
+- [x] Configure admin and add sample data
+- [x] Run migrations and test
+- [x] Fix LOGIN_URL redirect path
+- [x] Seed database with sample roadmaps, articles, internships, communities
+- [x] Start development server and verify all pages
+- [x] Add "create your roadmap" feature with dynamic topics/resources
+- [x] Add difficulty and estimated_duration fields to Roadmap model
+- [x] Create migration for new fields
+- [x] Update create_roadmap view to parse dynamic topic/resource data
+- [x] Update create.html with AlpineJS dynamic form
+- [x] Update seed.py with new field values
+- [x] Verify explore and create pages work correctly

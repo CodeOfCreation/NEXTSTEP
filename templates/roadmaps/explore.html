@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}Explore Roadmaps - NEXTSTEP{% endblock %}
+
+{% block content %}
+<div class="container" style="margin-top: 32px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+        <h1>Explore Roadmaps</h1>
+        <a href="{% url 'roadmap_create' %}" class="btn btn-primary">Create Roadmap</a>
+    </div>
+
+    <div class="grid">
+        {% for roadmap in roadmaps %}
+        <div class="card">
+            <h3 class="card-title">{{ roadmap.title }}</h3>
+            <p>{{ roadmap.description|truncatewords:20 }}</p>
+            <div style="margin: 12px 0;">
+                <span class="tag {% if roadmap.difficulty == 'beginner' %}tag-free{% elif roadmap.difficulty == 'intermediate' %}tag-verified{% else %}tag-paid{% endif %}">
+                    {{ roadmap.get_difficulty_display }}
+                </span>
+                <span class="tag tag-verified">{{ roadmap.estimated_duration }}</span>
+            </div>
+            <a href="{% url 'roadmap_detail' roadmap.pk %}" class="btn btn-outline btn-sm">View Roadmap</a>
+        </div>
+        {% empty %}
+        <p>No roadmaps available yet.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

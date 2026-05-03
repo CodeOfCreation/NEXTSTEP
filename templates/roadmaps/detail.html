@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ roadmap.title }} - NEXTSTEP{% endblock %}
+
+{% block content %}
+<div class="container" style="margin-top: 32px;">
+    <h1>{{ roadmap.title }}</h1>
+    <p style="color: var(--text-light); margin-bottom: 24px;">{{ roadmap.description }}</p>
+
+    <div class="timeline">
+        {% for topic in topics %}
+        <div class="timeline-item {% if topic.is_completed %}completed{% elif topic.is_next %}active{% endif %}">
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: start;">
+                    <div>
+                        <h3 class="card-title">{{ topic.name }}</h3>
+                        <p>{{ topic.description }}</p>
+                        <span class="tag tag-verified">{{ topic.estimated_time }}</span>
+                    </div>
+                    {% if user.is_authenticated %}
+                    <form method="post" action="{% url 'mark_complete' topic.pk %}">
+
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm {% if topic.is_completed %}btn-success{% else %}btn-outline{% endif %}">
+                            {% if topic.is_completed %}✓ Completed{% else %}Mark Complete{% endif %}
+                        </button>
+                    </form>
+                    {% endif %}
+                </div>
+
+                <h4 style="margin-top: 16px; font-size: 1rem;">Resources</h4>
+                <div style="margin-top: 8px;">
+                    {% for resource in topic.resources.all %}
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px; background: var(--bg); border-radius: 8px; margin-bottom: 8px;">
+                        <div>
+                            <a href="{{ resource.url }}" target="_blank" style="font-weight: 600; color: var(--primary);">{{ resource.title }}</a>
+                            <p style="font-size: 0.875rem; color: var(--text-light);">{{ resource.description|truncatewords:10 }}</p>
+                        </div>
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            {% if resource.resource_type == 'free' %}
+                            <span class="tag tag-free">Free</span>
+                            {% else %}
+                            <span class="tag tag-paid">Paid</span>
+                            {% endif %}
+
+                            {% if resource.is_verified %}
+                            <span class="tag tag-verified">Verified</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p>No resources added yet.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p>No topics in this roadmap yet.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

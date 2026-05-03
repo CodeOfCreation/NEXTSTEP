@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ internship.title }} - NEXTSTEP{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 800px; margin-top: 32px;">
+    <div class="card">
+        <h1 style="margin-bottom: 8px;">{{ internship.title }}</h1>
+        <h3 style="color: var(--text-light); font-weight: 500;">{{ internship.company }}</h3>
+
+        <div style="display: flex; gap: 12px; margin: 16px 0; flex-wrap: wrap;">
+            <span class="tag tag-verified">{{ internship.location }}</span>
+            <span class="tag {% if internship.is_remote %}tag-free{% else %}tag-paid{% endif %}">
+                {% if internship.is_remote %}Remote{% else %}On-site{% endif %}
+            </span>
+            <span class="tag tag-verified">{{ internship.duration }}</span>
+            <span class="tag tag-free">{{ internship.stipend }}</span>
+        </div>
+
+        <div style="line-height: 1.8; margin-bottom: 24px;">
+            <h4>Description</h4>
+            <p>{{ internship.description|linebreaks }}</p>
+
+            <h4>Requirements</h4>
+            <p>{{ internship.requirements|linebreaks }}</p>
+        </div>
+
+        <div style="display: flex; gap: 12px;">
+            <a href="{% url 'apply_internship' internship.pk %}" class="btn btn-primary">Apply Now</a>
+            <a href="{% url 'internship_list' %}" class="btn btn-outline">Back to List</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
