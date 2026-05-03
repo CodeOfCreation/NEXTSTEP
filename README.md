@@ -122,7 +122,7 @@ NEXTSTEP
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/yourusername/nextstep.git
+git clone https://github.com/CodeOfCreation/NEXTSTEP.git
 cd nextstep
 
 # 2. Create and activate virtual environment
